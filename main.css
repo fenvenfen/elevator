@@ -1,0 +1,11 @@
+*{
+    text-align: center
+}
+.menu{
+    width: 300px;
+    margin: 0 auto;
+}
+.menu input{
+    width: 100px;
+    display: inline-block;
+}

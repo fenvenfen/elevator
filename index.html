@@ -1,0 +1,25 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Elevator</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <h1>Elevator</h1>
+    <div class="menu">
+        <label for="floorCount">Floor:</label>
+        <input type="number" id="floorCount" name="floorCount" min="4" max="10">
+
+        <label for="elevatorCount">People:</label>
+        <input type="number" id="elevatorCount" name="elevatorCount" min="2" max="4">
+
+        <button onclick="init()">Start</button>
+    </div>
+    
+</body>
+<script src="Tween.js"></script>
+<script src="node_modules/pixi.js/dist/pixi.js"></script>
+<script src="main.js"></script>
+</html>

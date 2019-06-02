@@ -1,4 +1,4 @@
-var app = new PIXI.Application({
+let app = new PIXI.Application({
     width: 800,
     height: 1100,
     antialias: true,
@@ -8,19 +8,19 @@ var app = new PIXI.Application({
 document.body.appendChild(app.view);
 
 class Elevator  {
-    etaz: number;
+    floor: number;
     peoples: Array<Object>;
     derection: string;
     elevatorTex: any;
-    constructor(etaz: number, peoples: Array<People>, derection: string){
-        this.etaz = etaz;
+    constructor(floor: number, peoples: Array<People>, derection: string){
+        this.floor = floor;
         this.peoples = peoples;
         this.derection = derection;
         this.elevatorTex = this.createElevator() 
     };
     // Create Conteiner Block (PIXI JS) FOR ELEVATOR
     createElevator(){
-        var elevatorTex = new PIXI.Container();
+        const elevatorTex = new PIXI.Container();
         const elevatoImg = PIXI.Sprite.from('img/elevator.png');
         elevatoImg.width = 130;
         elevatoImg.height = 130
@@ -44,16 +44,16 @@ class Floor {
     createFloor(){
         //block text to floor number
         const levelFloorText = new PIXI.Text('Level ' + (this.floorNumber) + '');
-        var floorTex = new PIXI.Container();
+        const floorTex = new PIXI.Container();
 
-        var height = this.floorNumber * 100 + 10;
+        let height = this.floorNumber * 100 + 10;
         levelFloorText.x = 600;
         levelFloorText.y = height;
         floorTex.addChild(levelFloorText);
 
         app.stage.addChild(floorTex);
         // draw the floor
-        var graphics = new PIXI.Graphics();
+        let graphics = new PIXI.Graphics();
         graphics.lineStyle(2, 0xff00ff, 1);
         graphics.beginFill(0xff00bb, 0.25);
         graphics.drawRoundedRect(200, height, 500, 100, 1);
@@ -88,8 +88,9 @@ class People {
         });
         // BLock with text on the top of people sprite
         const textpeople = new PIXI.Text((this.floorLeav) + '' + (this.floorDirection), style);
-        var mainPeopleTex = new PIXI.Container();
         const peopleTex = PIXI.Sprite.from('img/Ghera.png');
+
+        let mainPeopleTex = new PIXI.Container();
         textpeople.x = 0;
         textpeople.y = -20;
         mainPeopleTex.addChild(textpeople);
@@ -130,19 +131,17 @@ function moveElevator(moveTime: number): void{
     startElevatorMove(moveTime);
 
     function startElevatorMove(moveTime: number){
-        if(!floors[elevator.etaz].peoples.length){
-            var moveTime = 1000;
+        if(!floors[elevator.floor].peoples.length){
+            moveTime = 1000;
         }else{
-            var moveTime = 1800;
+            moveTime = 1800;
         }
         setTimeout(function(){
-            // DO TO problem elevator etaz must be + 1
-          
             // Check direction 
-            if(elevator.etaz == numberFloor-1){
+            if(elevator.floor == numberFloor-1){
                 elevator.derection = "DOWN"
             }
-            if(elevator.etaz == 0){
+            if(elevator.floor == 0){
                 elevator.derection = "UP"
             }
             // Main function the check what peopele push to elevator or go out 
@@ -152,12 +151,12 @@ function moveElevator(moveTime: number): void{
                 // animate elevator
                 renderElevator(elevator, positionY, true);
                 positionY = positionY + 100
-                elevator.etaz++
+                elevator.floor++
             }else{
                 // animate elevator
                 renderElevator(elevator, positionY, false);
                 positionY = positionY - 100
-                elevator.etaz--
+                elevator.floor--
             }
             startElevatorMove(moveTime)
     
@@ -167,27 +166,27 @@ function moveElevator(moveTime: number): void{
 }
 function statePosition(elevator: Elevator): void{
     // check what peoeple must leave elevator
-    for(var i = 0; i < elevator.peoples.length; i++){
-        if(elevator.peoples[i].floorLeav == elevator.etaz){
-            removePeopleFromEleveatorAndPushToFloor(elevator.peoples[i], elevator, floors[elevator.etaz])
+    for(let i = 0; i < elevator.peoples.length; i++){
+        if(elevator.peoples[i].floorLeav == elevator.floor){
+            removePeopleFromEleveatorAndPushToFloor(elevator.peoples[i], elevator, floors[elevator.floor])
             elevator.peoples.splice(i, 1);
             --i;
         }
     }
     // check what peopele must push to elevator
-    for(let i = 0; i < floors[elevator.etaz].peoples.length; i++){
-        if(floors[elevator.etaz].peoples[i].floorDirection == elevator.derection){
+    for(let i = 0; i < floors[elevator.floor].peoples.length; i++){
+        if(floors[elevator.floor].peoples[i].floorDirection == elevator.derection){
             if(elevator.peoples.length <= peopleCountInElevator-1){
-                elevator.peoples.push(floors[elevator.etaz].peoples[i])
-                pushPeopleToElevatorAndRemoveFromFloor(floors[elevator.etaz].peoples[i], elevator, floors[elevator.etaz].floorTex)
-                floors[elevator.etaz].peoples.splice(i, 1);
+                elevator.peoples.push(floors[elevator.floor].peoples[i])
+                pushPeopleToElevatorAndRemoveFromFloor(floors[elevator.floor].peoples[i], elevator, floors[elevator.floor].floorTex)
+                floors[elevator.floor].peoples.splice(i, 1);
                 --i;
             }
         }
     }
 }
 function startPushOnFloor(floor: number, conteiner: any): void {
-    var rand = Number(randomNumber(4, 10) + '000');
+    let rand = Number(randomNumber(4, 10) + '000');
     // create and push peoeple to the floor 
     setTimeout(function(){
         createPeople(floor, conteiner);
@@ -195,8 +194,8 @@ function startPushOnFloor(floor: number, conteiner: any): void {
     }, rand);
 }
 function renderElevator(elevator: Elevator, positionY: number, direction: boolean): void{
-    var coords = { x: 0, y: positionY};
-    var tween = new TWEEN.Tween(coords)
+    let coords = { x: 0, y: positionY};
+    let tween = new TWEEN.Tween(coords)
       .to({ x: 0, y: direction ? positionY + 100 :  positionY - 100}, 1000)
       .onUpdate(function() {
         elevator.elevatorTex.position.set(coords.x, coords.y);
@@ -218,8 +217,8 @@ function removePeopleFromEleveatorAndPushToFloor(people: People, elevator: Eleva
     people.peopleTex.children[1].scale.x *= -1;   
     floor.floorTex.addChild(people.peopleTex);
    // animete to  go left side
-    var coords = { x: 200 + randomNumber(10, 50), y: 100 * floor.floorNumber + 60 };
-    var tween = new TWEEN.Tween(coords)
+    let coords = { x: 200 + randomNumber(10, 50), y: 100 * floor.floorNumber + 60 };
+    let tween = new TWEEN.Tween(coords)
       .to({ x: 600, y: 100 * floor.floorNumber + 60}, 2800)
       .onUpdate(function() {
         people.peopleTex.position.set(coords.x, coords.y);
@@ -243,7 +242,7 @@ function pushPeopleToElevatorAndRemoveFromFloor(people: People, elevator: Elevat
     elevator.elevatorTex.addChild(people.peopleTex);
 }
 function createPeople(floor: number, conteiner: any): void{
-    var floorDirection = randomNumber(0, 1);
+    let floorDirection = randomNumber(0, 1);
     // need this for set correct leavfloor
     if(floor == numberFloor-1){
         floorDirection = 0;
@@ -254,8 +253,8 @@ function createPeople(floor: number, conteiner: any): void{
     animatePeople(people);
 }
 function animatePeople(people: People){
-    var coords = { x: 600, y: 100 * people.floor + 60 };
-    var tween = new TWEEN.Tween(coords)
+    let coords = { x: 600, y: 100 * people.floor + 60 };
+    let tween = new TWEEN.Tween(coords)
       .to({ x: 200 + randomNumber(10, 20), y: 100 * people.floor + 60}, 1800)
       .onUpdate(function() {
         people.peopleTex.position.set(coords.x, coords.y);

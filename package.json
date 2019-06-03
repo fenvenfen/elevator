@@ -6,7 +6,8 @@
     "dependencies": {
         "@types/pixi.js": "^4.8.7",
         "@types/tween.js": "^17.2.0",
-        "pixi.js": "*"
+        "pixi.js": "*",
+        "pixi.js-legacy": "^5.0.3"
     },
     "devDependencies": {
         "serve-static": "^1.13.1"
